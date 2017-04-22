@@ -1,6 +1,7 @@
 package main.java.zephyr;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class MYSQLDBConnector
 {
@@ -58,6 +59,25 @@ public class MYSQLDBConnector
 	public ResultSet getAllRows(String tableName) throws Exception
 	{
 		String query = "SELECT * FROM " + tableName;
+		
+		return executeQuery(query);
+	}
+	
+	public ResultSet getRows(String tableName, int numRows) throws Exception
+	{
+		String query = "SELECT * FROM " + tableName + " LIMIT " + numRows;
+		
+		return executeQuery(query);
+	}
+	
+	public ResultSet getRowsByColumnNames(String tableName, ArrayList<String> columns) throws Exception
+	{
+		String columnNames = "";
+		for (String column : columns) {
+			columnNames += column + " ";
+		}
+		
+		String query = "SELECT " + columnNames + "FROM " + tableName;
 		
 		return executeQuery(query);
 	}

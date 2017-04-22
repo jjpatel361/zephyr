@@ -54,4 +54,11 @@ public class MYSQLDBConnector
         }
         return results;
     }
+	
+	public ResultSet getAllRows(String tableName) throws Exception
+	{
+		String query = "SELECT * FROM " + tableName;
+		
+		return executeQuery(query);
+	}
 }

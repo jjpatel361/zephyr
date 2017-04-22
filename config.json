@@ -1,0 +1,8 @@
+{
+	"userName":"vrn7",
+	"password":"pass",
+    "URL": "http://localhost:8080",
+    "databaseName":"mydb",
+	"tables":
+		["table1","table2","table3","table4"]
+}

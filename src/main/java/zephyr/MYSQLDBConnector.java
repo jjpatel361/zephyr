@@ -3,6 +3,10 @@ package main.java.zephyr;
 import java.sql.*;
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 public class MYSQLDBConnector
 {
 	private static final String CLASSNAME = "com.mysql.jdbc.Driver"; 
@@ -80,5 +84,46 @@ public class MYSQLDBConnector
 		String query = "SELECT " + columnNames + "FROM " + tableName;
 		
 		return executeQuery(query);
+	}
+	
+	public JsonObject getJsonFromTable(ResultSet rs) throws Exception
+	{
+		ResultSetMetaData rsmd = rs.getMetaData();
+		int numColumns = rsmd.getColumnCount();
+		
+		String json = "{\"results\":";
+		
+		while (rs.next()) {
+			json += "[{";
+			
+			for (int i = 1; i <= numColumns; i++) {
+				String colName = rsmd.getColumnName(i);
+				json += "\"" + colName + "\":";
+				
+				switch (rsmd.getColumnType(i)) {
+					case Types.INTEGER:
+						json += rs.getInt(i);
+						break;
+					
+					case Types.VARCHAR:
+						json += "\"" + rs.getString(i) + "\"";
+						break;
+				}
+				if (i < numColumns) {
+					json += ",";
+				}		
+			}
+			
+			json += "}]";
+			
+			if (!rs.last()) {
+				json += ",";
+			}
+		}
+		
+		json += "}";
+		JsonParser parser = new JsonParser();
+		
+		return parser.parse(json).getAsJsonObject();
 	}
 }
